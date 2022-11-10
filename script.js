@@ -1,29 +1,17 @@
-const fetchPromise = fetch("https://jsonplaceholder.typicode.com/users")
-fetchPromise.then(function(response){
-	if (response.status == 200){
-		console.log("fetch successful")
-		 return response.json();
-	}else{
-		console.log("fetch unsuccessful");
-
-	}
-
-})
-.then(function(products){
-	let placeholder = document.querySelector('#tableBody');
-	let out="";
-	for(let i=0;i<products.length;i++){
-		out+=`
-		<tr>
-			<td>${products[i].id}</td>
-			<td>${products[i].name}</td>
-			<td>${products[i].email}</td>
-			<td>${products[i].address.street},${products[i].address.city},${products[i].address.zipcode}</td>
-		</tr>
-		`;
-	}
-	placeholder.innerHTML=out;
-})
-.catch(function(error){
-	alert("data not found")
-})
+	const promise = new Promise(function(resolve,reject){
+		resolve(fetch("https://jsonplaceholder.typicode.com/users").then(response=> response.json()))
+		reject("no data found")
+	})
+	promise.then(json => json.map((json)=>{
+		document.querySelector('#tableBody').innerHTML+=`
+			<tr>
+				<td>${json.id}</td>
+				<td>${json.name}</td>
+				<td>${json.email}</td>
+				<td>${json.address.street},${json.address.city},${json.address.zipcode}</td>
+			</tr>
+			`;
+	}))
+	.catch(function(error){
+	alert("Data not found")
+	})
